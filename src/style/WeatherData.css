@@ -1,0 +1,83 @@
+ /* App.scss */
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 400px;
+  min-height: 364px;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 0px 10px #111;
+  mix-blend-mode: difference;
+  user-select: none;
+}
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header img {
+    max-width: 16px;
+    margin-right: 0.5rem;
+  }
+
+  main {
+    text-align: center;
+    margin: 2.5rem 0;
+
+    
+  }
+  .weather-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+
+   
+  }
+  .weather-icon {
+    width: 50px;
+    padding: 15px;
+  }
+
+  .description {
+    text-transform: capitalize;
+    font-size: 0.85rem;
+    font-weight: normal;
+  }
+
+  
+  .temperature {font-size: 6rem;}
+
+    .hi-lo {
+      display: flex;
+      justify-content: center;
+
+      /* > * {margin: 0 0.5rem;} */
+    }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+
+   
+  }
+  .weather-prop {
+    display: flex;
+    align-items: center;
+
+    
+  }
+  .weather-prop img {
+    max-width: 20px;
+    margin-right: 0.8rem;
+  }
