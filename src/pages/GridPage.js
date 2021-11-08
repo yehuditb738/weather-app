@@ -15,9 +15,7 @@ const columns = [
 const GridPage = (props) => {
     const arr = []
     let data = JSON.parse(localStorage.getItem('history'));
-    debugger
     if (data !== null && data !== undefined) {
-        //data = data["history"];
         Object.keys(data).forEach(function (key, i) {
             data[key].id = i;
             arr.push(data[key]);

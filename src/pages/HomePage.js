@@ -24,7 +24,6 @@ class HomePage extends React.Component {
     }
 
     weatherInit = () => {
-        debugger
         const success = (position) => {
             this.getWeatherData(position.coords.latitude, position.coords.longitude);
         }
@@ -51,9 +50,7 @@ class HomePage extends React.Component {
                     console.log(result);
                     const { name } = result;
                     const { country } = result.sys;
-                    const { temp, temp_min, temp_max, feels_like, humidity } = result.main;
-                    const { description, icon } = result.weather[0];
-                    const { speed, deg } = result.wind;
+                    const { temp, temp_min, temp_max, feels_like } = result.main;
                     const { lat, lon } = result.coord;
 
                     this.setState({
@@ -62,17 +59,12 @@ class HomePage extends React.Component {
                         weatherData: {
                             name,
                             country,
-                            description,
-                            icon,
                             temp: temp.toFixed(1),
                             feels_like: feels_like.toFixed(1),
                             temp_min: temp_min.toFixed(1),
                             temp_max: temp_max.toFixed(1),
-                            speed,
-                            deg,
                             lat,
                             lon,
-                            humidity
                         }
                     });
                 },
@@ -104,7 +96,6 @@ class HomePage extends React.Component {
     }
 
     saveToStorage() {
-        debugger
         let data = JSON.parse(localStorage.getItem('history'));
         let weatherDataObj = this.state.weatherData;
         const isExist = data.find(obj => obj.lat === weatherDataObj.lat && obj.lon === weatherDataObj.lon);
