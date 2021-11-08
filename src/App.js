@@ -1,26 +1,25 @@
 import React from 'react';
 import './App.css';
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import HomePage from '../src/pages/HomePage.js'
 import GridPage from '../src/pages/GridPage.js'
 
+const theme = createTheme({
+});
 
 class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/grid" element={<GridPage />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <BrowserRouter>
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/grid" component={GridPage} />
+          </BrowserRouter>
+        </div>
+      </ThemeProvider>
     );
   }
 }

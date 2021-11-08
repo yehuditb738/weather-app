@@ -2,6 +2,7 @@ import React from 'react';
 import '../style/global.css'
 import { WeatherData } from '../components/WeatherData'
 import { StatusData } from '../components/StatusData'
+import { withRouter } from 'react-router-dom';
 
 class HomePage extends React.Component {
     constructor(props) {
@@ -9,20 +10,26 @@ class HomePage extends React.Component {
         this.state = {
             status: 'init',
             isLoaded: false,
-            weatherData: null
+            weatherData: null,
+            storageMessege: ""
         }
     }
+
     abortController = new AbortController();
     controllerSignal = this.abortController.signal;
 
+    redirectPage = () => {
+        const { history } = this.props;
+        if (history) history.push('/grid');
+    }
+
     weatherInit = () => {
+        debugger
         const success = (position) => {
             this.getWeatherData(position.coords.latitude, position.coords.longitude);
         }
 
         const error = () => {
-            // this.setState({ status: 'unable' });
-            // localStorage.removeItem('location-allowed');
             alert('Unable to retrieve location.');
         }
 
@@ -32,7 +39,6 @@ class HomePage extends React.Component {
             alert('Your browser does not support location tracking, or permission is denied.');
         }
     }
-
 
     getWeatherData = (lat, lon) => {
         const weatherApi = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=3bbdcbe9bea8abc3cfb3a2ce90adbeb8`;
@@ -98,14 +104,23 @@ class HomePage extends React.Component {
     }
 
     saveToStorage() {
+        debugger
         let data = JSON.parse(localStorage.getItem('history'));
-        data["history"] = [];
         let weatherDataObj = this.state.weatherData;
-        const isExist = data["history"].find(obj => obj.lat === weatherDataObj.lat && obj.lon === weatherDataObj.lon);
-        if (isExist === undefined) {
+        const isExist = data.find(obj => obj.lat === weatherDataObj.lat && obj.lon === weatherDataObj.lon);
+        if (isExist === undefined || isExist === null) {
             let hisObj = { name: weatherDataObj.name, lat: weatherDataObj.lat, lon: weatherDataObj.lon, temp: weatherDataObj.temp }
-            data["history"].push(hisObj);
+
+            data.push(hisObj);
             localStorage.setItem('history', JSON.stringify(data));
+            this.setState({
+                storageMessege: "Add to DB!"
+            });
+        }
+        else {
+            this.setState({
+                storageMessege: "Data already exist!"
+            });
         }
     }
 
@@ -122,10 +137,14 @@ class HomePage extends React.Component {
                 <button className='btn' onClick={this.saveToStorage.bind(this)}>
                     Save To Storage
                 </button>
+                <span className='spn'>{this.state.storageMessege}</span>
                 {this.returnActiveView(this.state.status)}
+                <button className='btn' onClick={this.redirectPage}>
+                    To History
+                </button>
             </div>
         );
     }
 }
 
-export default HomePage;
+export default withRouter(HomePage);
