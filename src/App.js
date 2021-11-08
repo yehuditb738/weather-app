@@ -17,7 +17,6 @@ class App extends React.Component {
   controllerSignal = this.abortController.signal;
 
   weatherInit = () => {
-    debugger
     const success = (position) => {
       this.getWeatherData(position.coords.latitude, position.coords.longitude);
     }
@@ -37,8 +36,8 @@ class App extends React.Component {
 
 
   getWeatherData = (lat, lon) => {
-    debugger
     const weatherApi = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=3bbdcbe9bea8abc3cfb3a2ce90adbeb8`;
+    //const weatherApi = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.REACT_APP_WEATHER_KEY}`;
 
     fetch(weatherApi, { signal: this.controllerSignal })
       .then(response => response.json())
@@ -99,53 +98,17 @@ class App extends React.Component {
     }
   }
 
-  getWeatherData2 = (lat, lon) => {
-    const weatherApi = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=3bbdcbe9bea8abc3cfb3a2ce90adbeb8`;
-    //const weatherApi = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.REACT_APP_WEATHER_KEY}`;
-    //const weatherApi = `http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=3bbdcbe9bea8abc3cfb3a2ce90adbeb8`;
-
-    fetch(weatherApi, { signal: this.controllerSignal })
-      .then(response => response.json())
-      .then(
-        (result) => {
-
-          console.log("result " + result);
-          const { name } = result;
-          const { country } = result.sys;
-          const { temp, temp_min, temp_max, feels_like, humidity } = result.main;
-          const { description, icon } = result.weather[0];
-          const { speed, deg } = result.wind;
-          const { lat, lon } = result.coord;
-
-          this.setState({
-            isLoaded: true,
-            weatherData: {
-              name,
-              country,
-              description,
-              icon,
-              temp: temp.toFixed(1),
-              feels_like: feels_like.toFixed(1),
-              temp_min: temp_min.toFixed(1),
-              temp_max: temp_max.toFixed(1),
-              speed,
-              deg,
-              lat,
-              lon,
-              humidity
-            }
-          });
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      );
+  saveToStorage() {
+    let data = JSON.parse(localStorage.getItem('history'));
+    data["history"] = [];
+    let weatherDataObj = this.state.weatherData;
+    const isExist = data["history"].find(obj => obj.lat == weatherDataObj.lat && obj.lon == weatherDataObj.lon);
+    if (isExist == undefined) {
+      let hisObj = { name: weatherDataObj.name, lat: weatherDataObj.lat, lon: weatherDataObj.lon, temp: weatherDataObj.temp }
+      data["history"].push(hisObj);
+      localStorage.setItem('history', JSON.stringify(data));
+    }
   }
-
-
 
   componentDidMount() {
     this.weatherInit();
@@ -154,11 +117,13 @@ class App extends React.Component {
     this.abortController.abort();
   }
 
-
   render() {
     return (
       <div className='App'>
         <div className='container'>
+          <button className='btn' onClick={this.saveToStorage.bind(this)}>
+            Save To Storage
+          </button>
           {this.returnActiveView(this.state.status)}
         </div>
       </div>

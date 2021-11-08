@@ -23,3 +23,9 @@
   mix-blend-mode: difference;
   user-select: none;
 }
+.btn{
+  height: 37px;
+  background: slategrey;
+  font-size: 18px;
+  font-weight: bold;
+}
